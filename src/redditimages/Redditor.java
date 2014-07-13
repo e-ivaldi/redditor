@@ -8,26 +8,38 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import redditimages.extractor.RedditPageExtractor;
+import redditimages.extractor.RedditPostExtractor;
+import redditimages.extractor.factory.ExtractorsFactory;
+import redditimages.model.RedditComment;
+import redditimages.model.RedditGenericElement;
 import redditimages.model.RedditPost;
+import redditimages.model.section.RedditSection;
 
 public class Redditor {
 
-  public List<RedditPost> getRedditFirstPageElements() {
-    List<RedditPost> firstPagePosts = new ArrayList<>();
-    try {
-      Document doc = Jsoup.connect("http://www.reddit.com").get();
-      Elements titles = doc.select(".entry");
-      titles.iterator().forEachRemaining(ele -> {
-        RedditPost post = new RedditPost();
-        post.setTitleUrl(sanitizeUrl(ele.select("p a").attr("href")));
-        post.setCommentUrl(sanitizeUrl(ele.select(".first a").attr("href")));
-        firstPagePosts.add(post);
-      });
+  private ExtractorsFactory extractorsFactory;
 
-    } catch (IOException e) {
-      // TODO: unable to retrieve
-    }
-    return firstPagePosts;
+  public Redditor(ExtractorsFactory extractorsFactory) {
+    this.extractorsFactory = extractorsFactory;
+  }
+
+  public List<RedditPost> getFirstPagePosts(RedditSection section) {
+    List<RedditPost> posts = new ArrayList<>();
+    RedditPageExtractor pageExtractor = extractorsFactory.getPageExtractor("http://www.reddit.com/");
+
+    List<RedditGenericElement> pageElements = pageExtractor.getPagePosts(section.toString());
+    pageElements.forEach(ele -> {
+      RedditPostExtractor extractor = extractorsFactory.getPostExtractor(ele);
+      RedditPost post = new RedditPost();
+      post.setTitleUrl(extractor.getTitleUrl());
+      post.setCommentUrl(extractor.getCommentUrl());
+      post.setCommentsNumber(extractor.getCommentsNumber());
+      System.out.println("RedditPost:" + post);
+      posts.add(post);
+    });
+
+    return posts;
   }
 
   public void updatePostsWithMoreInfo(List<RedditPost> posts) {
@@ -36,17 +48,14 @@ public class Redditor {
     });
   }
 
-  private void updatePostWithMoreInfo(RedditPost p) {
+  public void updatePostWithMoreInfo(RedditPost p) {
     try {
-      System.out.println("title url:" + p.getTitleUrl());
-      System.out.println("comment url:" + p.getCommentUrl());
-
       Document doc = Jsoup.connect(p.getCommentUrl()).get();
       Elements titles = doc.select("a");
       titles.iterator().forEachRemaining(imgElement -> {
         String linkUrl = imgElement.attr("href");
         if (linkUrl.startsWith("http") && !linkUrl.contains("reddit")) {
-          System.out.println("\t" + linkUrl);
+          // System.out.println("\t" + linkUrl);
         }
       });
     } catch (IOException e) {
@@ -54,13 +63,9 @@ public class Redditor {
     }
   }
 
-  private String sanitizeUrl(String url) {
-    String result;
-    if (url.startsWith("/")) {
-      result = "http://www.reddit.com" + url;
-    } else {
-      result = url;
-    }
-    return result;
+  public List<RedditComment> getComments(RedditPost p) {
+    List<RedditComment> comments = new ArrayList<>();
+    return comments;
   }
+
 }

@@ -2,22 +2,18 @@ package redditimages;
 
 import java.util.List;
 
+import redditimages.extractor.factory.ExtractorsFactory;
+import redditimages.extractor.jsoup.JsoupExtractorsFactory;
 import redditimages.model.RedditPost;
+import redditimages.model.section.RedditSection;
 
 public class Main {
 
-  public static class App {
-
-    public void start() {
-      Redditor redditor = new Redditor();
-      List<RedditPost> frontPagePosts = redditor.getRedditFirstPageElements();
-      redditor.updatePostsWithMoreInfo(frontPagePosts);
-    }
-  }
-
   public static void main(String[] args) {
-    App app = new App();
-    app.start();
+    ExtractorsFactory extractorsFactory = new JsoupExtractorsFactory();
+    Redditor redditor = new Redditor(extractorsFactory);
+    List<RedditPost> frontPagePosts = redditor.getFirstPagePosts(RedditSection.HOT);
+    redditor.updatePostsWithMoreInfo(frontPagePosts);
   }
 
 }
