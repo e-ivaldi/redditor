@@ -5,35 +5,36 @@ import org.jsoup.nodes.Element;
 import redditimages.extractor.RedditPostExtractor;
 import redditimages.model.RedditGenericElement;
 
-public class RedditJsoupPostExtractor implements RedditPostExtractor{
+public class RedditJsoupPostExtractor implements RedditPostExtractor {
 
   public Element element;
-  
+
   protected RedditJsoupPostExtractor(RedditGenericElement element) {
-    this.element = element.getJsoupElement();
+    this.element = (Element) element.getElement();
   }
 
   @Override
   public String getTitleUrl() {
     return sanitizeUrl(element.select("p a").attr("href"));
   }
-  
+
   @Override
   public String getCommentUrl() {
     return sanitizeUrl(element.select(".first a").attr("href"));
   }
-  
+
   @Override
-  public int getCommentsNumber(){
+  public int getCommentsNumber() {
     int result = 0;
-    try{
+    try {
       result = Integer.parseInt(element.select(".first").text().split(" ")[0]);
-    }catch(Exception e){
+    } catch (Exception e) {
       System.out.println("unable to parse comments number, using default");
     }
     return result;
   }
-  
+
+  //this method doesn't belong to this class
   private String sanitizeUrl(String url) {
     String result;
     if (url.startsWith("/")) {
@@ -43,5 +44,5 @@ public class RedditJsoupPostExtractor implements RedditPostExtractor{
     }
     return result;
   }
-  
+
 }

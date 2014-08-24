@@ -1,20 +1,18 @@
 package redditimages.model;
 
-import org.jsoup.nodes.Element;
-
 public class RedditGenericElement {
 
-  private Element element;
+  private Object element;
 
-  public RedditGenericElement(Element element) {
+  public RedditGenericElement(Object element) {
     this.element = element;
   }
 
-  public Element getJsoupElement() {
+  public Object getElement() {
     return element;
   }
 
-  public void setElement(Element element) {
+  public void setElement(Object element) {
     this.element = element;
   }
 
