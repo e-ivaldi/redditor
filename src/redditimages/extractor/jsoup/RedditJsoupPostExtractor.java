@@ -1,9 +1,14 @@
 package redditimages.extractor.jsoup;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 import org.jsoup.nodes.Element;
 
 import redditimages.extractor.RedditPostExtractor;
 import redditimages.model.RedditGenericElement;
+import redditimages.util.UrlUtil;
 
 public class RedditJsoupPostExtractor implements RedditPostExtractor {
 
@@ -14,35 +19,42 @@ public class RedditJsoupPostExtractor implements RedditPostExtractor {
   }
 
   @Override
+  public String getId() {
+    return element.attr("data-fullname");
+  }
+
+  @Override
   public String getTitleUrl() {
-    return sanitizeUrl(element.select("p a").attr("href"));
+    return UrlUtil.convertToAbsUrlIfRelative(element.select(".entry p a").attr("href"));
   }
 
   @Override
   public String getCommentUrl() {
-    return sanitizeUrl(element.select(".first a").attr("href"));
+    return UrlUtil.convertToAbsUrlIfRelative(element.select(".entry .first a").attr("href"));
   }
 
   @Override
   public int getCommentsNumber() {
-    int result = 0;
+    int result;
     try {
-      result = Integer.parseInt(element.select(".first").text().split(" ")[0]);
-    } catch (Exception e) {
+      result = Integer.parseInt(element.select(".entry .first").text().split(" ")[0]);
+    } catch (NumberFormatException e) {
       System.out.println("unable to parse comments number, using default");
+      result = 0;
     }
     return result;
   }
 
-  //this method doesn't belong to this class
-  private String sanitizeUrl(String url) {
-    String result;
-    if (url.startsWith("/")) {
-      result = "http://www.reddit.com" + url;
-    } else {
-      result = url;
+  @Override
+  public LocalDateTime getMostRecentPostDate() {
+    String date = element.select("time").attr("datetime");
+    LocalDateTime ldt;
+    try {
+      ldt = LocalDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    } catch (DateTimeParseException e) {
+      ldt = LocalDateTime.of(1972, 1, 1, 0, 0, 0);
     }
-    return result;
+    return ldt;
   }
 
 }

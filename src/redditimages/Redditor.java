@@ -32,9 +32,11 @@ public class Redditor {
     pageElements.forEach(ele -> {
       RedditPostExtractor extractor = extractorsFactory.getPostExtractor(ele);
       RedditPost post = new RedditPost();
+      post.setId(extractor.getId());
       post.setTitleUrl(extractor.getTitleUrl());
       post.setCommentUrl(extractor.getCommentUrl());
       post.setCommentsNumber(extractor.getCommentsNumber());
+      post.setMostRecentPostDate(extractor.getMostRecentPostDate());
       System.out.println("RedditPost:" + post);
       posts.add(post);
     });

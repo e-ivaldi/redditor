@@ -13,7 +13,7 @@ public class Main {
     ExtractorsFactory extractorsFactory = new JsoupExtractorsFactory();
     Redditor redditor = new Redditor(extractorsFactory);
     List<RedditPost> frontPagePosts = redditor.getFirstPagePosts(RedditSection.HOT);
-    redditor.updatePostsWithMoreInfo(frontPagePosts);
+    //redditor.updatePostsWithMoreInfo(frontPagePosts);
   }
 
 }

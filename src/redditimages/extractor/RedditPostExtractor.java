@@ -1,5 +1,7 @@
 package redditimages.extractor;
 
+import java.time.LocalDateTime;
+
 public interface RedditPostExtractor {
 
   String getTitleUrl();
@@ -7,5 +9,9 @@ public interface RedditPostExtractor {
   int getCommentsNumber();
 
   String getCommentUrl();
+
+  LocalDateTime getMostRecentPostDate();
+
+  String getId();
 
 }

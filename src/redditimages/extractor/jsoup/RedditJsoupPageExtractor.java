@@ -24,7 +24,7 @@ public class RedditJsoupPageExtractor implements RedditPageExtractor{
     List<RedditGenericElement> elements = new ArrayList<>();
     try {
       Document doc = Jsoup.connect(String.format("%s/%s", pageUrl, section)).get();
-      Elements entries = doc.select(".entry");
+      Elements entries = doc.select(".thing").not("[style~=display:none]");
       entries.iterator().forEachRemaining(e-> elements.add(new RedditGenericElement(e)));
     } catch (IOException e) {
       e.printStackTrace();
