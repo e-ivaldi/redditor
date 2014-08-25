@@ -50,7 +50,7 @@ public class RedditJsoupPostExtractorTest {
   }
   
   @Test
-  public void getPostValidContentTest() {
+  public void getPostValidElementContentTest() {
     Element element = (Element) extractor.getPost().getElement();
     Elements elements = element.select(".commentarea");
     Assert.assertEquals(1, elements.size());
