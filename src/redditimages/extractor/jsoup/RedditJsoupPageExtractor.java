@@ -32,4 +32,17 @@ public class RedditJsoupPageExtractor implements RedditPageExtractor{
     return elements;
   }
   
+  @Override
+  public RedditGenericElement getPost(){
+    RedditGenericElement element;
+    try {
+      Document doc = Jsoup.connect(pageUrl).get();
+      element = new RedditGenericElement(doc);      
+    } catch (IOException e) {
+      //TODO: return an ad hoc empty element
+      element = new RedditGenericElement(null);
+    }
+    return element;
+  }
+  
 }

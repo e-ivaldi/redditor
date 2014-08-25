@@ -8,5 +8,6 @@ public interface ExtractorsFactory {
   
   RedditPostExtractor getPostExtractor(RedditGenericElement element);
 
-  RedditPageExtractor getPageExtractor(String section);
+  RedditPageExtractor getPageExtractor(String url);
+  
 }

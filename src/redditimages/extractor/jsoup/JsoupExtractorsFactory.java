@@ -8,8 +8,8 @@ import redditimages.model.RedditGenericElement;
 public class JsoupExtractorsFactory implements ExtractorsFactory {
 
   @Override
-  public RedditPageExtractor getPageExtractor(String section) {
-    return new RedditJsoupPageExtractor(section);
+  public RedditPageExtractor getPageExtractor(String url) {
+    return new RedditJsoupPageExtractor(url);
   }
 
   @Override

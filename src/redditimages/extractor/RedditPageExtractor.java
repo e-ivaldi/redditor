@@ -7,5 +7,7 @@ import redditimages.model.RedditGenericElement;
 public interface RedditPageExtractor {
 
   List<RedditGenericElement> getPagePosts(String section);
+
+  RedditGenericElement getPost();
   
 }
