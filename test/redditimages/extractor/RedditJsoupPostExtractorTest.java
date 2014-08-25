@@ -47,17 +47,11 @@ public class RedditJsoupPostExtractorTest {
     RedditGenericElement genericEle = extractor.getPost();
     Assert.assertNotNull(genericEle);
     Assert.assertNotNull(genericEle.getElement());
-
-    Element element = (Element) genericEle.getElement();
-    Elements elements = element.select(".commentarea");
-    Assert.assertEquals(1, elements.size());
   }
   
   @Test
   public void getPostValidContentTest() {
-    RedditGenericElement genericEle = extractor.getPost();
-    
-    Element element = (Element) genericEle.getElement();
+    Element element = (Element) extractor.getPost().getElement();
     Elements elements = element.select(".commentarea");
     Assert.assertEquals(1, elements.size());
   }
