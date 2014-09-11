@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.Connection.Method;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -36,11 +38,18 @@ public class RedditJsoupPageExtractor implements RedditPageExtractor{
   public RedditGenericElement getPost(){
     RedditGenericElement element;
     try {
-      Document doc = Jsoup.connect(pageUrl).get();
+      Document doc = Jsoup.connect(pageUrl)
+          .data("uh", "")
+          .data("over18","yes")
+          .method(Method.POST) //remove
+          .cookie("over18", "1")
+          .followRedirects(true)
+          .post();
+      
+      System.out.println(doc);
       element = new RedditGenericElement(doc);      
     } catch (IOException e) {
-      //TODO: return an ad hoc empty element
-      element = new RedditGenericElement(null);
+      throw new RuntimeException("unable to connect to the url : " + pageUrl,e );
     }
     return element;
   }

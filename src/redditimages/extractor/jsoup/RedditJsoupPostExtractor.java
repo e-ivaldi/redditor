@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 
 import redditimages.extractor.RedditPostExtractor;
 import redditimages.model.RedditGenericElement;
+import redditimages.model.RedditPost;
 import redditimages.util.UrlUtil;
 
 public class RedditJsoupPostExtractor implements RedditPostExtractor {
@@ -19,22 +20,29 @@ public class RedditJsoupPostExtractor implements RedditPostExtractor {
   }
 
   @Override
-  public String getId() {
+  public RedditPost getRedditPost() {
+    RedditPost post = new RedditPost();
+    post.setId(getId());
+    post.setTitleUrl(getTitleUrl());
+    post.setCommentUrl(getCommentUrl());
+    post.setCommentsNumber(getCommentsNumber());
+    post.setMostRecentPostDate(getMostRecentPostDate());
+    return post;
+  }
+
+  private String getId() {
     return element.attr("data-fullname");
   }
 
-  @Override
-  public String getTitleUrl() {
+  private String getTitleUrl() {
     return UrlUtil.convertToAbsUrlIfRelative(element.select(".entry p a").attr("href"));
   }
 
-  @Override
-  public String getCommentUrl() {
+  private String getCommentUrl() {
     return UrlUtil.convertToAbsUrlIfRelative(element.select(".entry .first a").attr("href"));
   }
 
-  @Override
-  public int getCommentsNumber() {
+  private int getCommentsNumber() {
     int result;
     try {
       result = Integer.parseInt(element.select(".entry .first").text().split(" ")[0]);
@@ -45,8 +53,7 @@ public class RedditJsoupPostExtractor implements RedditPostExtractor {
     return result;
   }
 
-  @Override
-  public LocalDateTime getMostRecentPostDate() {
+  private LocalDateTime getMostRecentPostDate() {
     String date = element.select("time").attr("datetime");
     LocalDateTime ldt;
     try {

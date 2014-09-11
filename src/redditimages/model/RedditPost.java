@@ -1,6 +1,7 @@
 package redditimages.model;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 public class RedditPost {
 
@@ -9,7 +10,8 @@ public class RedditPost {
   private String commentUrl;
   private LocalDateTime mostRecentPostDate;
   private int commentsNumber;
-  
+  private Set<String> imageLinks;
+
   public String getId() {
     return id;
   }
@@ -45,15 +47,23 @@ public class RedditPost {
   public int getCommentsNumber() {
     return commentsNumber;
   }
-  
+
   public void setCommentsNumber(int commentsNumber) {
-    this.commentsNumber = commentsNumber;    
+    this.commentsNumber = commentsNumber;
+  }
+
+  public Set<String> getImageLinks() {
+    return imageLinks;
+  }
+
+  public void setImageLinks(Set<String> imageLinks) {
+    this.imageLinks = imageLinks;
   }
 
   @Override
   public String toString() {
-    return "RedditPost [id=" + id + ", titleUrl=" + titleUrl + ", commentUrl=" + commentUrl + ", mostRecentPostDate=" + mostRecentPostDate
-        + ", commentsNumber=" + commentsNumber + "]";
+    return "RedditPost [id=" + id + ", titleUrl=" + titleUrl + ", commentUrl=" + commentUrl + ", mostRecentPostDate="
+        + mostRecentPostDate + ", commentsNumber=" + commentsNumber + "]";
   }
 
 }
